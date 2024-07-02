@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebAPIDemo.Models;
 
 namespace WebAPIDemo.Controllers
 {
@@ -13,16 +14,46 @@ namespace WebAPIDemo.Controllers
         }
 
         [HttpPost]
-        public string CreateShirt()
+        public string CreateShirt([FromForm]Shirt shirt)
         {
             return "Creating a shirt.";
         }
+
+        //FromBody Example
+        //[HttpPost]
+        //public string CreateShirt([FromBody] Shirt shirt)
+        //{
+        //    return "Creating a shirt.";
+        //}
 
         [HttpGet("{id}")]
         public string GetShirtById(int id)
         {
             return $"Reading shirt by ID: {id}";
         }
+
+        #region FromRoute,FromQuery,FromHeader Examples
+        ////FromRoute
+        //[HttpGet("{id}/{color}")]
+        //public string GetShirtById(int id,[FromRoute]string color)
+        //{
+        //    return $"Reading shirt by ID: {id}, Color : {color}";
+        //}
+
+        //FromQuery
+        //[HttpGet("{id}")]
+        //public string GetShirtById(int id, [FromQuery] string Color)
+        //{
+        //    return $"Reading shirt by ID: {id}, Color:{Color}";
+        //}
+
+        //FromHeader
+        //[HttpGet("{id}")]
+        //public string GetShirtById(int id, [FromHeader(Name = "Color")]string Color)
+        //{
+        //    return $"Reading shirt by ID: {id}, Color:{Color}";
+        //}
+        #endregion
 
         [HttpPut("{id}")]
         public string UpdateShirtById(int id)
