@@ -66,7 +66,8 @@ namespace WebAPIDemo.Controllers
 
 
         [HttpGet("{id}")]
-        [Shirt_ValidShirtIdFilter]
+        //[Shirt_ValidShirtIdFilter]
+        [TypeFilter(typeof(Shirt_ValidShirtIdFilterAttribute))]
         public IActionResult GetShirtById(int id)
         {
             #region Older way befor ActionFilter
@@ -85,7 +86,8 @@ namespace WebAPIDemo.Controllers
             //return Ok(shirt);
             #endregion
 
-            return Ok(ShirtRepository.GetShirtById(id));
+            //return Ok(ShirtRepository.GetShirtById(id));
+            return Ok(HttpContext.Items["shirt"]);
         }
 
         //[HttpGet("{id}")]
@@ -130,7 +132,8 @@ namespace WebAPIDemo.Controllers
         //}
 
         [HttpPut("{id}")]
-        [Shirt_ValidShirtIdFilter]
+        //[Shirt_ValidShirtIdFilter]
+        [TypeFilter(typeof(Shirt_ValidShirtIdFilterAttribute))]
         [Shirt_ValidateUpdateFilter]
         [Shirt_HandleUpdateExceptionFilter]
         public IActionResult UpdateShirtById(int id, Shirt shirt)
@@ -158,7 +161,8 @@ namespace WebAPIDemo.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Shirt_ValidShirtIdFilter]
+        //[Shirt_ValidShirtIdFilter]
+        [TypeFilter(typeof(Shirt_ValidShirtIdFilterAttribute))]
         public IActionResult DeleteShirtById(int id)
         {
             var shirt = ShirtRepository.GetShirtById(id);
