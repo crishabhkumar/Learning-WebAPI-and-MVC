@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPIDemo.Filters;
+using WebAPIDemo.Filters.Exception_Filter;
 using WebAPIDemo.Models;
 using WebAPIDemo.Repositories;
 
@@ -124,22 +125,25 @@ namespace WebAPIDemo.Controllers
         [HttpPut("{id}")]
         [Shirt_ValidShirtIdFilter]
         [Shirt_ValidateUpdateFilter]
+        [Shirt_HandleUpdateExceptionFilter]
         public IActionResult UpdateShirtById(int id,Shirt shirt)
         {
             //if(id != shirt.ShirtId) return BadRequest();  
 
-            try
-            {
-                ShirtRepository.UpdateShirt(shirt);
-            }
-            catch (Exception ex)
-            {
-                if (ShirtRepository.ShirtExists(id))
-                {
-                    return NotFound();
-                }
-                throw;
-            }
+            //try
+            //{
+            //    ShirtRepository.UpdateShirt(shirt);
+            //}
+            //catch (Exception ex)
+            //{
+            //    if (ShirtRepository.ShirtExists(id))
+            //    {
+            //        return NotFound();
+            //    }
+            //    throw;
+            //}
+
+            ShirtRepository.UpdateShirt(shirt);
 
             return NoContent();
 
