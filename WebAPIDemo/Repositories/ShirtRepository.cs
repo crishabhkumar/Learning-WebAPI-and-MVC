@@ -49,5 +49,15 @@ namespace WebAPIDemo.Repositories
                                             && x.Size.HasValue
                                             && size.Value == x.Size.Value);
         }
+
+        public static void UpdateShirt(Shirt shirt)
+        {
+            var shirtToUpdate = shirtList.First(x => x.ShirtId == shirt.ShirtId);
+            shirtToUpdate.Price = shirt.Price;
+            shirtToUpdate.Brand = shirt.Brand;
+            shirtToUpdate.Gender = shirt.Gender;
+            shirtToUpdate.Color = shirt.Color;
+            shirtToUpdate.Size = shirt.Size;
+        }
     }
 }

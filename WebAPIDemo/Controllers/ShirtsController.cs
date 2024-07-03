@@ -122,9 +122,28 @@ namespace WebAPIDemo.Controllers
         //}
 
         [HttpPut("{id}")]
-        public IActionResult UpdateShirtById(int id)
+        [Shirt_ValidShirtIdFilter]
+        [Shirt_ValidateUpdateFilter]
+        public IActionResult UpdateShirtById(int id,Shirt shirt)
         {
-            return Ok($"Updating shirt by ID: {id}");
+            //if(id != shirt.ShirtId) return BadRequest();  
+
+            try
+            {
+                ShirtRepository.UpdateShirt(shirt);
+            }
+            catch (Exception ex)
+            {
+                if (ShirtRepository.ShirtExists(id))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+
+            return NoContent();
+
+            //return Ok($"Updating shirt by ID: {id}");
         }
 
         [HttpDelete("{id}")]
