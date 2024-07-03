@@ -18,7 +18,8 @@ namespace WebAPIDemo.Controllers
         [HttpGet]
         public IActionResult GetShirts()
         {
-            return Ok("Reading all the shirts.");
+            //return Ok("Reading all the shirts.");
+            return Ok(ShirtRepository.GetShirts());
         }
 
         //[HttpPost]
@@ -35,9 +36,24 @@ namespace WebAPIDemo.Controllers
         //}
 
         [HttpPost]
+        [Shirt_ValidateCreateFilter]
         public IActionResult CreateShirt([FromBody] Shirt shirt)
         {
-            return Ok("Creating a shirt.");
+            //return Ok("Creating a shirt.");
+            //if (shirt == null)
+            //{
+            //    return BadRequest();
+            //}
+
+            //var shirtTemp = ShirtRepository.GetShirtByProperties(shirt.Brand, shirt.Gender, shirt.Color, shirt.Size);
+            //if (shirtTemp != null)
+            //{
+            //    return BadRequest();
+            //}
+
+            ShirtRepository.AddShirt(shirt);
+
+            return CreatedAtAction(nameof(GetShirtById), new { id = shirt.ShirtId }, shirt);
         }
 
 
