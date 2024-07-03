@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPIDemo.Models;
+using WebAPIDemo.Repositories;
 
 namespace WebAPIDemo.Controllers
 {
@@ -7,15 +8,6 @@ namespace WebAPIDemo.Controllers
     [Route("api/[controller]")]
     public class ShirtsController : ControllerBase
     {
-        private List<Shirt> shirtList = new List<Shirt>()
-        {
-            new Shirt { ShirtId = 1, Brand = "Nike", Color = "Red", Size = 42, Gender = "Male", Price = 29.99 },
-            new Shirt { ShirtId = 2, Brand = "Adidas", Color = "Blue", Size = 40, Gender = "Female", Price = 25.99 },
-            new Shirt { ShirtId = 3, Brand = "Puma", Color = "Green", Size = 44, Gender = "Male", Price = 32.99 },
-            new Shirt { ShirtId = 4, Brand = "Reebok", Color = "Black", Size = 38, Gender = "Female", Price = 27.99 },
-            new Shirt { ShirtId = 5, Brand = "Under Armour", Color = "White", Size = 46, Gender = "Male", Price = 34.99 }
-        };
-
 
         //[HttpGet]
         //public string GetShirts()
@@ -56,7 +48,7 @@ namespace WebAPIDemo.Controllers
                 return BadRequest();
             }
 
-            var shirt = shirtList.FirstOrDefault(x => x.ShirtId == id);
+            var shirt = ShirtRepository.GetShirtById(id);
 
             if (shirt == null)
             {
