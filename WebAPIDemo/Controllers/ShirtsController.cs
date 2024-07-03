@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebAPIDemo.DAL;
 using WebAPIDemo.Filters;
 using WebAPIDemo.Filters.Exception_Filter;
 using WebAPIDemo.Models;
@@ -10,6 +11,11 @@ namespace WebAPIDemo.Controllers
     [Route("api/[controller]")]
     public class ShirtsController : ControllerBase
     {
+        private readonly ApplicationDBContext dBContext;
+        public ShirtsController(ApplicationDBContext db)
+        {
+            this.dBContext = db;
+        }
 
         //[HttpGet]
         //public string GetShirts()
@@ -20,7 +26,8 @@ namespace WebAPIDemo.Controllers
         public IActionResult GetShirts()
         {
             //return Ok("Reading all the shirts.");
-            return Ok(ShirtRepository.GetShirts());
+            //return Ok(ShirtRepository.GetShirts());
+            return Ok(dBContext.shirts.ToList());
         }
 
         //[HttpPost]
@@ -126,7 +133,7 @@ namespace WebAPIDemo.Controllers
         [Shirt_ValidShirtIdFilter]
         [Shirt_ValidateUpdateFilter]
         [Shirt_HandleUpdateExceptionFilter]
-        public IActionResult UpdateShirtById(int id,Shirt shirt)
+        public IActionResult UpdateShirtById(int id, Shirt shirt)
         {
             //if(id != shirt.ShirtId) return BadRequest();  
 
