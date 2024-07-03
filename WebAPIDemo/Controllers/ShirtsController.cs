@@ -13,18 +13,18 @@ namespace WebAPIDemo.Controllers
             return "Reading all the shirts.";
         }
 
-        [HttpPost]
-        public string CreateShirt([FromForm]Shirt shirt)
-        {
-            return "Creating a shirt.";
-        }
-
-        //FromBody Example
         //[HttpPost]
-        //public string CreateShirt([FromBody] Shirt shirt)
+        //public string CreateShirt([FromForm]Shirt shirt)
         //{
         //    return "Creating a shirt.";
         //}
+
+        //FromBody Example
+        [HttpPost]
+        public string CreateShirt([FromBody] Shirt shirt)
+        {
+            return "Creating a shirt.";
+        }
 
         [HttpGet("{id}")]
         public string GetShirtById(int id)
