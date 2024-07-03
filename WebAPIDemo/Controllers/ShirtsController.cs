@@ -151,9 +151,17 @@ namespace WebAPIDemo.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Shirt_ValidShirtIdFilter]
         public IActionResult DeleteShirtById(int id)
         {
-            return Ok($"Deleting shirt by ID: {id}");
+            var shirt = ShirtRepository.GetShirtById(id);
+
+            ShirtRepository.DeleteShirt(id);
+
+            return Ok(shirt);
+
+
+            //return Ok($"Deleting shirt by ID: {id}");
         }
 
     }

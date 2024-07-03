@@ -26,15 +26,15 @@ namespace WebAPIDemo.Repositories
         }
         public static bool ShirtExists(int id)
         {
-            return shirtList.Exists(x=>x.ShirtId == id);   
+            return shirtList.Exists(x => x.ShirtId == id);
         }
 
         public static Shirt? GetShirtById(int id)
         {
-            return shirtList.FirstOrDefault(x=>x.ShirtId==id);
+            return shirtList.FirstOrDefault(x => x.ShirtId == id);
         }
 
-        public static Shirt? GetShirtByProperties(string? brand,string? gender,string? color,int? size)
+        public static Shirt? GetShirtByProperties(string? brand, string? gender, string? color, int? size)
         {
             return shirtList.FirstOrDefault(x => !string.IsNullOrWhiteSpace(brand)
                                             && !string.IsNullOrWhiteSpace(x.Brand)
@@ -59,5 +59,15 @@ namespace WebAPIDemo.Repositories
             shirtToUpdate.Color = shirt.Color;
             shirtToUpdate.Size = shirt.Size;
         }
+
+        public static void DeleteShirt(int id)
+        {
+            Shirt shirt = shirtList.FirstOrDefault(x => x.ShirtId == id);
+            if (shirt != null)
+            {
+                shirtList.Remove(shirt);
+            }
+        }
+
     }
 }
