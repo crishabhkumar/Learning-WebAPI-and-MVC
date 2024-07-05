@@ -44,7 +44,8 @@ namespace WebAPIDemo.Controllers
         //}
 
         [HttpPost]
-        [Shirt_ValidateCreateFilter]
+        //[Shirt_ValidateCreateFilter]
+        [TypeFilter(typeof(Shirt_ValidateCreateFilterAttribute))]
         public IActionResult CreateShirt([FromBody] Shirt shirt)
         {
             //return Ok("Creating a shirt.");
@@ -59,7 +60,9 @@ namespace WebAPIDemo.Controllers
             //    return BadRequest();
             //}
 
-            ShirtRepository.AddShirt(shirt);
+            //ShirtRepository.AddShirt(shirt);
+            dBContext.Add(shirt);
+            dBContext.SaveChanges();
 
             return CreatedAtAction(nameof(GetShirtById), new { id = shirt.ShirtId }, shirt);
         }
