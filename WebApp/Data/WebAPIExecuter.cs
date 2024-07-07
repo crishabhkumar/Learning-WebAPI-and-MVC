@@ -32,8 +32,6 @@ namespace WebApp.Data
 
             await HandlePotentialError(response);
 
-
-
             return await response.Content.ReadFromJsonAsync<T>();
         }
 

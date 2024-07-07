@@ -39,15 +39,7 @@ namespace WebApp.Controllers
                 }
                 catch (WebAPIException ex)
                 {
-                    if(ex.ErrorResponse != null
-                        && ex.ErrorResponse.Errors != null
-                        && ex.ErrorResponse.Errors.Count > 0)
-                    {
-                        foreach (var erro in ex.ErrorResponse.Errors)
-                        {
-                            ModelState.AddModelError(erro.Key, string.Join("; ", erro.Value));
-                        }
-                    }
+                    HandleWebApiException(ex);
                 }
             }
             return View(shirt);
@@ -55,10 +47,18 @@ namespace WebApp.Controllers
 
         public async Task<IActionResult> UpdateShirt(int shirtID)
         {
-            var shirt = await _executer.InvokeGet<Shirt>($"shirts/{shirtID}");
-            if (shirt != null)
+            try
             {
-                return View(shirt);
+                var shirt = await _executer.InvokeGet<Shirt>($"shirts/{shirtID}");
+                if (shirt != null)
+                {
+                    return View(shirt);
+                }
+            }
+            catch (WebAPIException ex)
+            {
+                HandleWebApiException(ex);
+                return View();
             }
 
             return NotFound();
@@ -67,25 +67,53 @@ namespace WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateShirt(Shirt shirt)
         {
-            if (ModelState.IsValid)
+            try
             {
-                await _executer.InvokePut($"shirts/{shirt.ShirtId}", shirt);
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    await _executer.InvokePut($"shirts/{shirt.ShirtId}", shirt);
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (WebAPIException ex)
+            {
+                HandleWebApiException(ex);
             }
 
             return View(shirt);
         }
         public async Task<IActionResult> DeleteShirt(int shirtID)
         {
-            var shirt = await _executer.InvokeGet<Shirt>($"shirts/{shirtID}");
-            if (shirt != null)
+            try
             {
-                await _executer.InvokeDelete($"shirts/{shirtID}");
-                return RedirectToAction("Index");
+                var shirt = await _executer.InvokeGet<Shirt>($"shirts/{shirtID}");
+                if (shirt != null)
+                {
+                    await _executer.InvokeDelete($"shirts/{shirtID}");
+                    return RedirectToAction("Index");
+                }
             }
+            catch (WebAPIException ex)
+            {
+                HandleWebApiException(ex);
+                return View(nameof(Index), await _executer.InvokeGet<List<Shirt>>("shirts"));
+            }
+            
 
             return NotFound();
         }
 
+        private void HandleWebApiException(WebAPIException webAPIException)
+        {
+            if (webAPIException.ErrorResponse != null
+             && webAPIException.ErrorResponse.Errors != null
+             && webAPIException.ErrorResponse.Errors.Count > 0)
+            {
+                foreach (var erro in webAPIException.ErrorResponse.Errors)
+                {
+                    ModelState.AddModelError(erro.Key, string.Join("; ", erro.Value));
+                }
+            }
+        }
     }
 }
