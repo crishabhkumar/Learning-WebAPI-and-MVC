@@ -37,5 +37,28 @@ namespace WebApp.Controllers
             }
             return View(shirt);
         }
+
+        public async Task<IActionResult> UpdateShirt(int shirtID)
+        {
+            var shirt = await _executer.InvokeGet<Shirt>($"shirts/{shirtID}");
+            if (shirt != null)
+            {
+                return View(shirt);
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateShirt(Shirt shirt)
+        {
+            if (ModelState.IsValid)
+            {
+                await _executer.InvokePut($"shirts/{shirt.ShirtId}", shirt);
+                return RedirectToAction("Index");
+            }
+
+            return View(shirt);
+        }
     }
 }
