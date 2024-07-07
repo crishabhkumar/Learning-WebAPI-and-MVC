@@ -11,6 +11,7 @@
             <td>Size</td>
             <td>Price</td>
             <td></td>
+            <td></td>
         </tr>
     </thead>
     <tbody>
@@ -21,8 +22,9 @@
                 <td>@item.Gender</td>
                 <td>@item.Color</td>
                 <td>@item.Size</td>
-                <td>@(item.Price.HasValue ? item.Price.Value.ToString("c"):" ")</td>
-                <td><a class="btn btn-link" asp-controller="Shirts" asp-action="UpdateShirt" asp-route-shirtid ="@item.ShirtId">Edit</a></td>
+                <td>@(item.Price.HasValue ? item.Price.Value.ToString("c") : " ")</td>
+                <td><a class="btn btn-link" asp-controller="Shirts" asp-action="UpdateShirt" asp-route-shirtid="@item.ShirtId">Edit</a></td>
+                <td><a class="btn btn-link" asp-controller="Shirts" asp-action="DeleteShirt" asp-route-shirtid="@item.ShirtId">Delete</a></td>
             </tr>
         }
     </tbody>

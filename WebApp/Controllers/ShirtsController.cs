@@ -60,5 +60,17 @@ namespace WebApp.Controllers
 
             return View(shirt);
         }
+        public async Task<IActionResult> DeleteShirt(int shirtID)
+        {
+            var shirt = await _executer.InvokeGet<Shirt>($"shirts/{shirtID}");
+            if (shirt != null)
+            {
+                await _executer.InvokeDelete($"shirts/{shirtID}");
+                return RedirectToAction("Index");
+            }
+
+            return NotFound();
+        }
+
     }
 }
