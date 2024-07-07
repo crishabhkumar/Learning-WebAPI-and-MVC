@@ -29,10 +29,25 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response = await _executer.InvokePost<Shirt>("shirts", shirt);
-                if (response != null)
+                try
                 {
-                    return RedirectToAction("Index");
+                    var response = await _executer.InvokePost<Shirt>("shirts", shirt);
+                    if (response != null)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                }
+                catch (WebAPIException ex)
+                {
+                    if(ex.ErrorResponse != null
+                        && ex.ErrorResponse.Errors != null
+                        && ex.ErrorResponse.Errors.Count > 0)
+                    {
+                        foreach (var erro in ex.ErrorResponse.Errors)
+                        {
+                            ModelState.AddModelError(erro.Key, string.Join("; ", erro.Value));
+                        }
+                    }
                 }
             }
             return View(shirt);

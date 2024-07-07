@@ -1,4 +1,6 @@
-﻿namespace WebApp.Data
+﻿using System.Text.Json;
+
+namespace WebApp.Data
 {
     public class WebAPIExecuter : IWebAPIExecuter
     {
@@ -12,14 +14,25 @@
         public async Task<T?> InvokeGet<T>(string relativeUrl)
         {
             var httpClient = _httpClientFactory.CreateClient(apiName);
-            return await httpClient.GetFromJsonAsync<T>(relativeUrl);
+            //return await httpClient.GetFromJsonAsync<T>(relativeUrl);
+
+            var request = new HttpRequestMessage(HttpMethod.Get, relativeUrl);
+            var response = await httpClient.SendAsync(request);
+
+            await HandlePotentialError(response);
+
+            return await response.Content.ReadFromJsonAsync<T>();
         }
 
         public async Task<T?> InvokePost<T>(string relativeUrl,T obj)
         {
             var httpClient = _httpClientFactory.CreateClient(apiName);
             var response = await httpClient.PostAsJsonAsync<T>(relativeUrl,obj);
-            response.EnsureSuccessStatusCode();
+            //response.EnsureSuccessStatusCode();
+
+            await HandlePotentialError(response);
+
+
 
             return await response.Content.ReadFromJsonAsync<T>();
         }
@@ -28,15 +41,27 @@
         {
             var httpClient = _httpClientFactory.CreateClient(apiName);
             var response = await httpClient.PutAsJsonAsync(relativeUrl,obj);
-            response.EnsureSuccessStatusCode();
+            //response.EnsureSuccessStatusCode();
+
+            await HandlePotentialError(response);
 
         }
         public async Task InvokeDelete(string relativeUrl)
         {
             var httpClient = _httpClientFactory.CreateClient(apiName);
             var response = await httpClient.DeleteAsync(relativeUrl);
-            response.EnsureSuccessStatusCode();
+            //response.EnsureSuccessStatusCode();
 
+            await HandlePotentialError(response);
+        }
+
+        private async Task HandlePotentialError(HttpResponseMessage response)
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorJSon = await response.Content.ReadAsStringAsync();
+                throw new WebAPIException(errorJSon);
+            }
         }
     }
 }
